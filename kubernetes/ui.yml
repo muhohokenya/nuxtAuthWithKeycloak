@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-app
+  labels:
+    app: ui-app
+spec:
+  replicas: 1
+  #  strategy:
+  #    type: RollingUpdate
+  #    rollingUpdate:
+  #      maxUnavailable: 0
+  #      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ui-app
+  template:
+    metadata:
+      name: ui-app
+      labels:
+        app: ui-app
+    spec:
+      containers:
+        - name: ui-app
+          image: muhohoweb/ui-service:2.3.7
+          envFrom:
+            - configMapRef:
+                name: ui-config
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-app
+spec:
+  selector:
+    app: ui-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ui-app-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: a2c93c1880eac4359b4e649c5df01d13-2037815601.us-east-1.elb.amazonaws.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ui-app
+                port:
+                  number: 80
+

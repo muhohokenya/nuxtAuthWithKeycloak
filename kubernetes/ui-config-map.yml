@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ui-config
+data:
+  KEY_CLOAK_API_TOKEN: "http://localhost/keycloak/auth/realms/school-realm/protocol/openid-connect/token"
+  KEY_CLOAK_API_URL: "http://localhost/keycloak/auth"
+  STUDENTS_API: "http://localhost/students/api/v1"
+  LIBRARY_API: "http://localhost/library/api/v1"
+  LIBRARY_ROLE: "client_admin"
+  REALM: "students-realm"
+  CLIENT_ID: "student-service"
+  UI_URL: "http://localhost"
